@@ -64,6 +64,7 @@ def show_pokemon(request, pokemon_id):
             'pokemon_id': pokemon.id,
             'img_url': f'http://127.0.0.1:8000/{pokemon.image}',
             'title_ru': pokemon.title,
+            'description': pokemon.description,
         }
 
     pokemon_entities = PokemonEntity.objects.filter(pokemon__id=pokemon_id)
