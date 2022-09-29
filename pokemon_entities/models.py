@@ -7,13 +7,22 @@ class Pokemon(models.Model):
     title_jp = models.CharField(max_length=20, blank=True, null=True)
     image = models.ImageField(upload_to='media/', blank=True, null=True)
     description = models.TextField(max_length=400, blank=True, null=True)
+    previous_evolution = models.ForeignKey(
+        'Pokemon',
+        on_delete=models.CASCADE,
+        related_name='evolutions',
+        blank=True,
+        null=True
+    )
 
     def __str__(self):
         return f'{self.title}'
 
 
 class PokemonEntity(models.Model):
-    pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE)
+    pokemon = models.ForeignKey(
+        Pokemon, on_delete=models.CASCADE, related_name='pokemons'
+    )
     level = models.IntegerField()
     lat = models.FloatField(max_length=20)
     lon = models.FloatField(max_length=20)
