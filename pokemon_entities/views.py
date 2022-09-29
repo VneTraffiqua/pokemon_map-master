@@ -56,20 +56,35 @@ def show_all_pokemons(request):
 
 
 def show_pokemon(request, pokemon_id):
-    with open('pokemon_entities/pokemons.json', encoding='utf-8') as database:
-        pokemons = json.load(database)['pokemons']
-
     pokemon = Pokemon.objects.get(id=pokemon_id)
-    pok = {
-            'pokemon_id': pokemon.id,
-            'img_url': f'http://127.0.0.1:8000/{pokemon.image}',
-            'title_ru': pokemon.title,
-            'description': pokemon.description,
-            'title_en': pokemon.title_en,
-            'title_jp': pokemon.title_jp
+    previous_evolution = {}
+    next_evolution = {}
+    if pokemon.previous_evolution:
+        previous_evolution = {
+            "title_ru": pokemon.previous_evolution.title,
+            "pokemon_id": pokemon.previous_evolution.id,
+            "img_url": f'http://127.0.0.1:8000/{pokemon.previous_evolution.image}'
+            }
+    next_evolutions = pokemon.evolutions.all()
+    for evolved_pokemon in next_evolutions:
+        next_evolution = {
+            "title_ru": evolved_pokemon.title,
+            "pokemon_id": evolved_pokemon.id,
+            "img_url": f'http://127.0.0.1:8000/{evolved_pokemon.image}'
         }
 
-    pokemon_entities = PokemonEntity.objects.filter(pokemon__id=pokemon_id)
+    pok = {
+        'pokemon_id': pokemon.id,
+        'img_url': f'http://127.0.0.1:8000/{pokemon.image}',
+        'title_ru': pokemon.title,
+        'description': pokemon.description,
+        'title_en': pokemon.title_en,
+        'title_jp': pokemon.title_jp,
+        'previous_evolution': previous_evolution,
+        'next_evolution': next_evolution
+    }
+
+    pokemon_entities = pokemon.pokemons.all()
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     for pokemon in pokemon_entities:
         add_pokemon(
