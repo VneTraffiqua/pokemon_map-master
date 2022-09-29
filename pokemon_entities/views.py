@@ -62,14 +62,17 @@ def show_pokemon(request, pokemon_id):
         previous_evolution = {
             "title_ru": pokemon.previous_evolution.title,
             "pokemon_id": pokemon.previous_evolution.id,
-            "img_url": f'{url_parts.scheme}://{url_parts.netloc}/{pokemon.previous_evolution.image}'
+            "img_url":
+                f'{url_parts.scheme}://{url_parts.netloc}/'
+                f'{pokemon.previous_evolution.image}'
             }
     next_evolutions = pokemon.evolutions.all()
     for evolved_pokemon in next_evolutions:
         next_evolution = {
             "title_ru": evolved_pokemon.title,
             "pokemon_id": evolved_pokemon.id,
-            "img_url":  f'{url_parts.scheme}://{url_parts.netloc}/{evolved_pokemon.image}'
+            "img_url":  f'{url_parts.scheme}://{url_parts.netloc}/'
+                        f'{evolved_pokemon.image}'
         }
 
     pokemon_parameters = {
