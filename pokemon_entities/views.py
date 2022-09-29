@@ -67,10 +67,10 @@ def show_pokemon(request, pokemon_id):
         next_evolution = {
             "title_ru": evolved_pokemon.title,
             "pokemon_id": evolved_pokemon.id,
-            "img_url": f'http://127.0.0.1:8000/{evolved_pokemon.image}'
+            "img_url":  f'http://127.0.0.1:8000/{evolved_pokemon.image}'
         }
 
-    pok = {
+    pokemon_parameters = {
         'pokemon_id': pokemon.id,
         'img_url': f'http://127.0.0.1:8000/{pokemon.image}',
         'title_ru': pokemon.title,
@@ -94,5 +94,5 @@ def show_pokemon(request, pokemon_id):
         )
 
     return render(request, 'pokemon.html', context={
-        'map': folium_map._repr_html_(), 'pokemon': pok
+        'map': folium_map._repr_html_(), 'pokemon': pokemon_parameters
     })
