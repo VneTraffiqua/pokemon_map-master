@@ -1,8 +1,9 @@
 import folium
 from django.utils import timezone
-from django.http import HttpResponseNotFound, HttpRequest
+import urllib.parse
 from django.shortcuts import render
 from .models import Pokemon, PokemonEntity
+from pogomap.settings import MEDIA_URL
 
 
 MOSCOW_CENTER = [55.751244, 37.618423]
@@ -53,6 +54,7 @@ def show_all_pokemons(request):
 
 
 def show_pokemon(request, pokemon_id):
+    url_parts = urllib.parse.urlparse(request.build_absolute_uri())
     pokemon = Pokemon.objects.get(id=pokemon_id)
     previous_evolution = {}
     next_evolution = {}
@@ -60,19 +62,19 @@ def show_pokemon(request, pokemon_id):
         previous_evolution = {
             "title_ru": pokemon.previous_evolution.title,
             "pokemon_id": pokemon.previous_evolution.id,
-            "img_url": f'http://127.0.0.1:8000/{pokemon.previous_evolution.image}'
+            "img_url": f'{url_parts.scheme}://{url_parts.netloc}/{pokemon.previous_evolution.image}'
             }
     next_evolutions = pokemon.evolutions.all()
     for evolved_pokemon in next_evolutions:
         next_evolution = {
             "title_ru": evolved_pokemon.title,
             "pokemon_id": evolved_pokemon.id,
-            "img_url":  f'http://127.0.0.1:8000/{evolved_pokemon.image}'
+            "img_url":  f'{url_parts.scheme}://{url_parts.netloc}/{evolved_pokemon.image}'
         }
 
     pokemon_parameters = {
         'pokemon_id': pokemon.id,
-        'img_url': f'http://127.0.0.1:8000/{pokemon.image}',
+        'img_url': f'{url_parts.scheme}://{url_parts.netloc}/{pokemon.image}',
         'title_ru': pokemon.title,
         'description': pokemon.description,
         'title_en': pokemon.title_en,
@@ -90,7 +92,7 @@ def show_pokemon(request, pokemon_id):
         add_pokemon(
             folium_map, pokemon.lat,
             pokemon.lon,
-            f'http://127.0.0.1:8000/{pokemon.pokemon.image}'
+            f'{url_parts.scheme}://{url_parts.netloc}/{pokemon.pokemon.image}'
         )
 
     return render(request, 'pokemon.html', context={
