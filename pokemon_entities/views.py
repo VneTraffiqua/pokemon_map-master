@@ -3,7 +3,6 @@ from django.utils import timezone
 import urllib.parse
 from django.shortcuts import render
 from .models import Pokemon, PokemonEntity
-from pogomap.settings import MEDIA_URL
 
 
 MOSCOW_CENTER = [55.751244, 37.618423]
