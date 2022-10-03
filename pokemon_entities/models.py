@@ -20,7 +20,7 @@ class Pokemon(models.Model):
     previous_evolution = models.ForeignKey(
         'Pokemon',
         on_delete=models.CASCADE,
-        related_name='pokemons_evolution',
+        related_name='next_evolutions',
         blank=True,
         null=True,
         verbose_name='предыдущая эволюция'
@@ -34,7 +34,7 @@ class PokemonEntity(models.Model):
     pokemon = models.ForeignKey(
         Pokemon,
         on_delete=models.CASCADE,
-        related_name='pokemons_on_map',
+        related_name='entities',
         verbose_name='Покемон'
     )
     level = models.IntegerField(
