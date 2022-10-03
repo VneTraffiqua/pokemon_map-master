@@ -3,6 +3,8 @@ from django.utils import timezone
 import urllib.parse
 from django.shortcuts import render
 from .models import Pokemon, PokemonEntity
+from django.shortcuts import get_object_or_404
+
 
 
 MOSCOW_CENTER = [55.751244, 37.618423]
@@ -54,7 +56,7 @@ def show_all_pokemons(request):
 
 def show_pokemon(request, pokemon_id):
     url_parts = urllib.parse.urlparse(request.build_absolute_uri())
-    pokemon = Pokemon.objects.get(id=pokemon_id)
+    pokemon = get_object_or_404(Pokemon, id=pokemon_id)
     previous_evolution = {}
     next_evolution = {}
     if pokemon.previous_evolution:
@@ -65,7 +67,7 @@ def show_pokemon(request, pokemon_id):
                 f'{url_parts.scheme}://{url_parts.netloc}/'
                 f'{pokemon.previous_evolution.image}'
             }
-    next_evolutions = pokemon.evolutions.all()
+    next_evolutions = pokemon.pokemons_evolution.all()
     for evolved_pokemon in next_evolutions:
         next_evolution = {
             "title_ru": evolved_pokemon.title,
@@ -85,7 +87,7 @@ def show_pokemon(request, pokemon_id):
         'next_evolution': next_evolution
     }
 
-    pokemon_entities = pokemon.pokemons.filter(
+    pokemon_entities = pokemon.pokemons_on_map.filter(
         appeared_at__lt=timezone.now(),
         disappeared_at__gt=timezone.now()
     )
