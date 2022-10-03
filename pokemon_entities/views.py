@@ -27,9 +27,10 @@ def add_pokemon(folium_map, lat, lon, image_url=DEFAULT_IMAGE_URL):
 
 
 def show_all_pokemons(request):
+    current_time = timezone.now()
     pokemon_entities = PokemonEntity.objects.filter(
-        appeared_at__lt=timezone.now(),
-        disappeared_at__gt=timezone.now()
+        appeared_at__lt=current_time,
+        disappeared_at__gt=current_time
     )
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     for pokemon in pokemon_entities:
