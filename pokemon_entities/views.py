@@ -68,7 +68,7 @@ def show_pokemon(request, pokemon_id):
                 f'{url_parts.scheme}://{url_parts.netloc}/'
                 f'{pokemon.previous_evolution.image}'
             }
-    next_evolutions = pokemon.pokemons_evolution.all()
+    next_evolutions = pokemon.next_evolutions.all()
     for evolved_pokemon in next_evolutions:
         next_evolution = {
             "title_ru": evolved_pokemon.title,
@@ -88,7 +88,7 @@ def show_pokemon(request, pokemon_id):
         'next_evolution': next_evolution
     }
 
-    pokemon_entities = pokemon.pokemons_on_map.filter(
+    pokemon_entities = pokemon.entities.filter(
         appeared_at__lt=timezone.now(),
         disappeared_at__gt=timezone.now()
     )
